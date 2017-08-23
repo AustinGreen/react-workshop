@@ -5,7 +5,6 @@ import './styles.css'
 
 const { func, any } = PropTypes
 
-
 ////////////////////////////////////////////////////////////////////////////////
 // Requirements
 //
@@ -18,23 +17,44 @@ class Select extends React.Component {
     defaultValue: any
   }
 
+  state = {
+    showDropdown: false
+  }
+
+  toggleDropdown = () => {
+    this.setState({ showDropdown: !this.state.showDropdown })
+  }
+
   render() {
+    const { showDropdown } = this.state
     return (
-      <div className="select">
-        <div className="label">label <span className="arrow">▾</span></div>
-        <div className="options">
-          {this.props.children}
+      <div className="select" onClick={() => this.toggleDropdown()}>
+        <div className="label">
+          {this.getLabel()} <span className="arrow">▾</span>
         </div>
+        {showDropdown &&
+          <div className="options">
+            {this.renderChildren()}
+          </div>}
       </div>
     )
   }
 }
 
-
 class Option extends React.Component {
+  state = {
+    currentValue: ''
+  }
+
+  select = () => {
+    this.setState({ currentValue: this.props.value })
+  }
+
   render() {
     return (
-      <div className="option">{this.props.children}</div>
+      <div onClick={this.select} className="option">
+        {this.props.children}
+      </div>
     )
   }
 }
@@ -45,37 +65,36 @@ class App extends React.Component {
   }
 
   setToMintChutney = () => {
-   this.setState({ selectValue: 'mint-chutney' })
+    this.setState({ selectValue: 'mint-chutney' })
   }
 
   render() {
     return (
       <div>
         <h1>Select/Option</h1>
-        <pre>{JSON.stringify(this.state, null, 2)}</pre>
+        <pre>
+          {JSON.stringify(this.state, null, 2)}
+        </pre>
 
         <h2>Controlled</h2>
         <p>
           <button onClick={this.setToMintChutney}>Set to Mint Chutney</button>
         </p>
 
-        <Select
-          value={this.state.selectValue}
-          onChange={(selectValue) => this.setState({ selectValue })}
-        >
+        <Select value={this.state.selectValue} onChange={selectValue => this.setState({ selectValue })}>
           <Option value="tikka-masala">Tikka Masala</Option>
           <Option value="tandoori-chicken">Tandoori Chicken</Option>
           <Option value="dosa">Dosa</Option>
           <Option value="mint-chutney">Mint Chutney</Option>
         </Select>
 
-        <h2>Uncontrolled</h2>
+        {/* <h2>Uncontrolled</h2>
         <Select defaultValue="tikka-masala">
           <Option value="tikka-masala">Tikka Masala</Option>
           <Option value="tandoori-chicken">Tandoori Chicken</Option>
           <Option value="dosa">Dosa</Option>
           <Option value="mint-chutney">Mint Chutney</Option>
-        </Select>
+        </Select> */}
       </div>
     )
   }

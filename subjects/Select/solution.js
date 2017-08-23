@@ -17,20 +17,16 @@ class Select extends React.Component {
   }
 
   componentWillMount() {
-    if (!this.isUncontrolled() && !this.props.onChange)
-      console.warn('This thing is gonna be read-only, etc. etc.')
+    if (!this.isUncontrolled() && !this.props.onChange) console.warn('This thing is gonna be read-only, etc. etc.')
   }
 
   getLabel() {
     let label = null
 
-    React.Children.forEach(this.props.children, (child) => {
+    React.Children.forEach(this.props.children, child => {
       const childValue = child.props.value
 
-      if (
-        (this.isUncontrolled() && childValue === this.state.value) ||
-        (child.props.value === this.props.value)
-      ) {
+      if ((this.isUncontrolled() && childValue === this.state.value) || child.props.value === this.props.value) {
         label = child.props.children
       }
     })
@@ -51,32 +47,31 @@ class Select extends React.Component {
   handleSelect(value) {
     const nextState = { showChildren: false }
 
-    if (this.isUncontrolled())
-      nextState.value = value
+    if (this.isUncontrolled()) nextState.value = value
 
     this.setState(nextState, () => {
-      if (this.props.onChange)
-        this.props.onChange(value)
+      if (this.props.onChange) this.props.onChange(value)
     })
   }
 
   renderChildren() {
-    return React.Children.map(this.props.children, (child) => (
+    return React.Children.map(this.props.children, child =>
       React.cloneElement(child, {
-        onSelect: (value) => this.handleSelect(value)
+        onSelect: value => this.handleSelect(value)
       })
-    ))
+    )
   }
 
   render() {
     return (
       <div className="select" onClick={() => this.toggle()}>
-        <div className="label">{this.getLabel()} <span className="arrow">▾</span></div>
-        {this.state.showChildren && (
+        <div className="label">
+          {this.getLabel()} <span className="arrow">▾</span>
+        </div>
+        {this.state.showChildren &&
           <div className="options">
             {this.renderChildren()}
-          </div>
-        )}
+          </div>}
       </div>
     )
   }
@@ -89,10 +84,9 @@ class Option extends React.Component {
 
   render() {
     return (
-      <div
-        className="option"
-        onClick={() => this.handleClick()}
-      >{this.props.children}</div>
+      <div className="option" onClick={() => this.handleClick()}>
+        {this.props.children}
+      </div>
     )
   }
 }
@@ -111,14 +105,16 @@ class App extends React.Component {
       <div>
         <h1>Select/Option</h1>
 
-        <pre>{JSON.stringify(this.state, null, 2)}</pre>
+        <pre>
+          {JSON.stringify(this.state, null, 2)}
+        </pre>
 
         <h2>Controlled</h2>
         <p>
           <button onClick={this.setToMintChutney}>Set to Mint Chutney</button>
         </p>
 
-        <Select
+        {/* <Select
           value={this.state.selectValue}
           onChange={(selectValue) => this.setState({ selectValue })}
         >
@@ -126,7 +122,7 @@ class App extends React.Component {
           <Option value="tandoori-chicken">Tandoori Chicken</Option>
           <Option value="dosa">Dosa</Option>
           <Option value="mint-chutney">Mint Chutney</Option>
-        </Select>
+        </Select> */}
 
         <h2>Uncontrolled</h2>
         <Select defaultValue="tikka-masala">

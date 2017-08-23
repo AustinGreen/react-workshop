@@ -24,13 +24,9 @@ class App extends React.Component {
   render() {
     const { media } = this.state
 
-    return media.big ? (
-      <h1>Hey, this is a big screen</h1>
-    ) : media.tiny ? (
-      <h6>tiny tiny tiny</h6>
-    ) : (
-      <h3>Somewhere in between</h3>
-    )
+    return media.big
+      ? <h1>Hey, this is a big screen</h1>
+      : media.tiny ? <h6>tiny tiny tiny</h6> : <h3>Somewhere in between</h3>
   }
 }
 

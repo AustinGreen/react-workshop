@@ -16,6 +16,14 @@ class Modal extends React.Component {
     children: PropTypes.node
   }
 
+  componentDidUpdate() {
+    if (this.props.isOpen) {
+      this.open()
+    } else {
+      this.close()
+    }
+  }
+
   open() {
     $(this.node).modal('show')
   }
@@ -25,12 +33,15 @@ class Modal extends React.Component {
   }
 
   render() {
+    const { isOpen } = this.props
     return (
-      <div className="modal fade" ref={node => this.node = node}>
+      <div className="modal fade" ref={node => (this.node = node)}>
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h4 className="modal-title">{this.props.title}</h4>
+              <h4 className="modal-title">
+                {this.props.title}
+              </h4>
             </div>
             <div className="modal-body">
               {this.props.children}
@@ -43,12 +54,19 @@ class Modal extends React.Component {
 }
 
 class App extends React.Component {
-  openModal = () => {
-    this.modal.open()
+  constructor(props) {
+    super(props)
+    this.state = {
+      isModalOpen: false
+    }
+
+    this.toggleModalState = this.toggleModalState.bind(this)
   }
 
-  closeModal = () => {
-    this.modal.close()
+  toggleModalState() {
+    this.setState(prevState => ({
+      isModalOpen: !prevState.isModalOpen
+    }))
   }
 
   render() {
@@ -56,22 +74,18 @@ class App extends React.Component {
       <div className="container">
         <h1>Let’s make bootstrap modal declarative</h1>
 
-        <button
-          className="btn btn-primary"
-          onClick={this.openModal}
-        >open modal</button>
+        <button className="btn btn-primary" onClick={this.toggleModalState}>
+          open modal
+        </button>
 
-        <Modal title="Declarative is better" ref={modal => this.modal = modal}>
+        <Modal isOpen={this.state.isModalOpen} title="Declarative is better">
           <p>Calling methods on instances is a FLOW not a STOCK!</p>
           <p>It’s the dynamic process, not the static program in text space.</p>
           <p>You have to experience it over time, rather than in snapshots of state.</p>
-          <button
-            onClick={this.closeModal}
-            type="button"
-            className="btn btn-default"
-          >Close</button>
+          <button onClick={this.toggleModalState} type="button" className="btn btn-default">
+            Close
+          </button>
         </Modal>
-
       </div>
     )
   }
